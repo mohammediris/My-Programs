@@ -1,0 +1,113 @@
+! Hostname and domain
+hostname C9300-SW1
+ip domain-name example.local
+
+! Enable secret
+enable secret YOUR_ENABLE_SECRET
+
+! User for SSH
+username admin privilege 15 secret YOUR_ADMIN_PASSWORD
+
+! Generate crypto keys for SSH
+crypto key generate rsa modulus 2048
+
+! SSH and vty lines
+ip ssh version 2
+line vty 0 4
+ login local
+ transport input ssh
+
+! VLANs and SVIs
+vlan 10
+ name Users
+vlan 11
+ name Servers
+vlan 12
+ name Voice
+vlan 13
+ name Management
+vlan 14
+ name Wireless
+vlan 15
+ name Printers
+vlan 16
+ name Cameras
+vlan 17
+ name Guests
+vlan 18
+ name IoT
+vlan 19
+ name Infrastructure
+
+interface Vlan10
+ description Users
+ ip address 10.10.10.1 255.255.255.0
+ no shutdown
+
+interface Vlan11
+ description Servers
+ ip address 10.10.11.1 255.255.255.0
+ no shutdown
+
+interface Vlan12
+ description Voice
+ ip address 10.10.12.1 255.255.255.0
+ no shutdown
+
+interface Vlan13
+ description Management
+ ip address 10.10.13.1 255.255.255.0
+ no shutdown
+
+interface Vlan14
+ description Wireless
+ ip address 10.10.14.1 255.255.255.0
+ no shutdown
+
+interface Vlan15
+ description Printers
+ ip address 10.10.15.1 255.255.255.0
+ no shutdown
+
+interface Vlan16
+ description Cameras
+ ip address 10.10.16.1 255.255.255.0
+ no shutdown
+
+interface Vlan17
+ description Guests
+ ip address 10.10.17.1 255.255.255.0
+ no shutdown
+
+interface Vlan18
+ description IoT
+ ip address 10.10.18.1 255.255.255.0
+ no shutdown
+
+interface Vlan19
+ description Infrastructure
+ ip address 10.10.19.1 255.255.255.0
+ no shutdown
+
+! Management interface (example, change as needed)
+interface GigabitEthernet1/0/1
+ description Uplink
+ switchport mode trunk
+
+! Default gateway for management (if needed)
+ip default-gateway 10.10.13.254
+
+! SNMPv3 configuration
+snmp-server group SNMPv3GROUP v3 priv
+snmp-server user SNMPv3USER SNMPv3GROUP v3 auth sha YOUR_SNMP_AUTH_PASSWORD priv aes 128 YOUR_SNMP_PRIV_PASSWORD
+snmp-server host 10.10.13.100 version 3 priv SNMPv3USER
+snmp-server enable traps
+
+! (Optional: restrict SNMP access to management subnet)
+access-list 10 SNMP-ACL permit 10.10.13.0 0.0.0.255
+snmp-server community public RO 10
+snmp-server community private RW 10
+
+! Save configuration
+end
+write memory
