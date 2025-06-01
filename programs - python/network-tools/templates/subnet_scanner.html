@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Subnet Scanner</h2>
+<form method="post">
+    <label>Subnet (CIDR): <input type="text" name="subnet" required></label><br>
+    <label>Ports to scan:</label><br>
+    <input type="checkbox" name="ports" value="80" checked> 80 (HTTP)
+    <input type="checkbox" name="ports" value="443"> 443 (HTTPS)
+    <input type="checkbox" name="ports" value="22"> 22 (SSH)
+    <input type="checkbox" name="ports" value="21"> 21 (FTP)
+    <input type="checkbox" name="ports" value="3389"> 3389 (RDP)
+    <br><br>
+    <button type="submit">Scan</button>
+</form>
+{% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
+{% if result %}
+    <h3>Results:</h3>
+    <pre>
+{% for line in result %}
+{{ line }}
+{% endfor %}
+    </pre>
+{% endif %}
+{% endblock %}

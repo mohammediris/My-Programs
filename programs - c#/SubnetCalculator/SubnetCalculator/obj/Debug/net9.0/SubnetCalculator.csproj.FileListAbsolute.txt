@@ -1,0 +1,5 @@
+C:\My Data\My-Programs\programs - c#\SubnetCalculator\SubnetCalculator\obj\Debug\net9.0\SubnetCalculator.GeneratedMSBuildEditorConfig.editorconfig
+C:\My Data\My-Programs\programs - c#\SubnetCalculator\SubnetCalculator\obj\Debug\net9.0\SubnetCalculator.AssemblyInfoInputs.cache
+C:\My Data\My-Programs\programs - c#\SubnetCalculator\SubnetCalculator\obj\Debug\net9.0\SubnetCalculator.AssemblyInfo.cs
+C:\My Data\My-Programs\programs - c#\SubnetCalculator\SubnetCalculator\obj\Debug\net9.0\SubnetCalculator.csproj.CoreCompileInputs.cache
+C:\My Data\My-Programs\programs - c#\SubnetCalculator\SubnetCalculator\obj\Debug\net9.0\SubnetCalculator.sourcelink.json

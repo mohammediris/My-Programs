@@ -1,0 +1,9 @@
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #232946; color: #eebbc3; }
+nav { background: #393e46; padding: 1em; }
+nav a { color: #eebbc3; margin-right: 1em; text-decoration: none; font-weight: bold; }
+nav a:hover { color: #ffd803; }
+main { padding: 2em; }
+input, button { border-radius: 8px; border: none; padding: 0.5em; margin: 0.2em; }
+button { background: #ffd803; color: #232946; font-weight: bold; box-shadow: 2px 2px 8px #393e46; }
+.error { color: #ff3860; font-weight: bold; }
+pre { background: #121629; color: #eebbc3; padding: 1em; border-radius: 8px; }
