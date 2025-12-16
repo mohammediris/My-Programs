@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\My Data\\My-Programs\\programs - c#\\SubnetCalculator\\SubnetCalculator\\SubnetCalculator.csproj",
+      "projectUniqueName": "C:\\My Data\\My Programs\\My-Programs\\programs - c#\\SubnetCalculator\\SubnetCalculator\\SubnetCalculator.csproj",
       "projectName": "SubnetCalculator",
-      "projectPath": "C:\\My Data\\My-Programs\\programs - c#\\SubnetCalculator\\SubnetCalculator\\SubnetCalculator.csproj",
+      "projectPath": "C:\\My Data\\My Programs\\My-Programs\\programs - c#\\SubnetCalculator\\SubnetCalculator\\SubnetCalculator.csproj",
       "packagesPath": "C:\\Users\\iris\\.nuget\\packages\\",
-      "outputPath": "C:\\My Data\\My-Programs\\programs - c#\\SubnetCalculator\\SubnetCalculator\\obj\\",
+      "outputPath": "C:\\My Data\\My Programs\\My-Programs\\programs - c#\\SubnetCalculator\\SubnetCalculator\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\iris\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -63,19 +63,19 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.16, 8.0.16]"
+            "version": "[8.0.17, 8.0.17]"
           },
           {
             "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[8.0.16, 8.0.16]"
+            "version": "[8.0.17, 8.0.17]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.16, 8.0.16]"
+            "version": "[8.0.17, 8.0.17]"
           },
           {
             "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.16, 8.0.16]"
+            "version": "[8.0.17, 8.0.17]"
           }
         ],
         "frameworkReferences": {
@@ -86,7 +86,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.205/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
