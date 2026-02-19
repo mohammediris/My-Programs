@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SubnetCalculator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b28f3a72778ea7775eb09c5b71c7edd4dfed601")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3aeafddb45bb8a8d33fa0f565e04852b55c527d7")]
 [assembly: System.Reflection.AssemblyProductAttribute("SubnetCalculator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SubnetCalculator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

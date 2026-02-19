@@ -18,64 +18,115 @@ from dhcp_server import DHCPServer, simulate_client, get_interfaces, is_admin
 class DHCPGui:
     def __init__(self, root):
         self.root = root
-        root.title("DHCP Server Demo")
         self.log_q = queue.Queue()
 
-        frm = ttk.Frame(root, padding=10)
-        frm.grid(sticky="nsew")
+        # Main container with padding
+        main_frm = ttk.Frame(root, padding=15)
+        main_frm.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        root.rowconfigure(0, weight=1)
+        root.columnconfigure(0, weight=1)
 
-        left = ttk.Frame(frm)
-        left.grid(row=0, column=0, sticky="ns", padx=(0, 10))
+        # Title
+        title_lbl = ttk.Label(main_frm, text="DHCP Server Configuration", 
+                             font=('TkDefaultFont', 16, 'bold'))
+        title_lbl.grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 15))
 
-        # Interface selector
-        ttk.Label(left, text="Interface:").grid(row=0, column=0, sticky="w")
-        self.iface_cb = ttk.Combobox(left, state='readonly')
-        self.iface_cb.grid(row=1, column=0, sticky="we")
+        # Left panel - Configuration
+        left_frame = ttk.Frame(main_frm)
+        left_frame.grid(row=1, column=0, sticky="nsew", padx=(0, 15))
+        main_frm.columnconfigure(0, weight=0)
+        main_frm.columnconfigure(1, weight=1)
+        main_frm.rowconfigure(1, weight=1)
+
+        # === Interface Configuration Section ===
+        iface_frame = ttk.Labelframe(left_frame, text="Network Interface", padding=12)
+        iface_frame.grid(row=0, column=0, sticky="ew", pady=(0, 12))
+        iface_frame.columnconfigure(0, weight=1)
+
+        ttk.Label(iface_frame, text="Interface:", font=('TkDefaultFont', 10)).grid(row=0, column=0, sticky="w")
+        self.iface_cb = ttk.Combobox(iface_frame, state='readonly', font=('TkDefaultFont', 10))
+        self.iface_cb.grid(row=1, column=0, sticky="we", pady=(5, 0))
         self.iface_cb.bind('<<ComboboxSelected>>', self._on_iface_selected)
 
-        # Bind address
-        ttk.Label(left, text="Bind Address:").grid(row=2, column=0, sticky="w")
-        self.bind_entry = ttk.Entry(left)
-        self.bind_entry.insert(0, "127.0.0.1")
-        self.bind_entry.grid(row=3, column=0, sticky="we")
+        # === Server Configuration Section ===
+        server_frame = ttk.Labelframe(left_frame, text="Server Settings", padding=12)
+        server_frame.grid(row=1, column=0, sticky="ew", pady=(0, 12))
+        server_frame.columnconfigure(0, weight=1)
 
-        # Port and privileged option
-        ttk.Label(left, text="Port:").grid(row=4, column=0, sticky="w")
-        self.port_entry = ttk.Entry(left)
+        ttk.Label(server_frame, text="Bind Address:", font=('TkDefaultFont', 10)).grid(row=0, column=0, sticky="w")
+        self.bind_entry = ttk.Entry(server_frame, font=('TkDefaultFont', 10))
+        self.bind_entry.insert(0, "127.0.0.1")
+        self.bind_entry.grid(row=1, column=0, sticky="we", pady=(5, 0))
+
+        ttk.Label(server_frame, text="Port:", font=('TkDefaultFont', 10)).grid(row=2, column=0, sticky="w", pady=(10, 0))
+        self.port_entry = ttk.Entry(server_frame, font=('TkDefaultFont', 10))
         self.port_entry.insert(0, "6767")
-        self.port_entry.grid(row=5, column=0, sticky="we")
+        self.port_entry.grid(row=3, column=0, sticky="we", pady=(5, 0))
 
         self.use_priv_var = tk.BooleanVar(value=False)
-        self.priv_cb = ttk.Checkbutton(left, text='Use port 67 (requires admin)', variable=self.use_priv_var, command=self._on_priv_toggle)
-        self.priv_cb.grid(row=6, column=0, sticky='we', pady=(4,0))
+        self.priv_cb = ttk.Checkbutton(server_frame, text='Use port 67 (requires admin)', 
+                                       variable=self.use_priv_var, command=self._on_priv_toggle)
+        self.priv_cb.grid(row=4, column=0, sticky='we', pady=(10, 0))
 
-        # Pool range
-        ttk.Label(left, text="Pool Start:").grid(row=7, column=0, sticky="w")
-        self.pool_start = ttk.Entry(left)
+        # === DHCP Pool Configuration Section ===
+        pool_frame = ttk.Labelframe(left_frame, text="DHCP Pool Range", padding=12)
+        pool_frame.grid(row=2, column=0, sticky="ew", pady=(0, 12))
+        pool_frame.columnconfigure(0, weight=1)
+
+        ttk.Label(pool_frame, text="Pool Start:", font=('TkDefaultFont', 10)).grid(row=0, column=0, sticky="w")
+        self.pool_start = ttk.Entry(pool_frame, font=('TkDefaultFont', 10))
         self.pool_start.insert(0, "192.168.50.100")
-        self.pool_start.grid(row=8, column=0, sticky="we")
+        self.pool_start.grid(row=1, column=0, sticky="we", pady=(5, 0))
 
-        ttk.Label(left, text="Pool End:").grid(row=9, column=0, sticky="w")
-        self.pool_end = ttk.Entry(left)
+        ttk.Label(pool_frame, text="Pool End:", font=('TkDefaultFont', 10)).grid(row=2, column=0, sticky="w", pady=(10, 0))
+        self.pool_end = ttk.Entry(pool_frame, font=('TkDefaultFont', 10))
         self.pool_end.insert(0, "192.168.50.150")
-        self.pool_end.grid(row=10, column=0, sticky="we")
+        self.pool_end.grid(row=3, column=0, sticky="we", pady=(5, 0))
 
-        self.start_btn = ttk.Button(left, text="Start Server", command=self.toggle_server)
-        self.start_btn.grid(row=11, column=0, pady=(8, 0), sticky="we")
+        # === Status and Actions Section ===
+        status_frame = ttk.Labelframe(left_frame, text="Actions & Status", padding=12)
+        status_frame.grid(row=3, column=0, sticky="ew", pady=(0, 12))
+        status_frame.columnconfigure(0, weight=1)
 
-        self.sim_btn = ttk.Button(left, text="Simulate Client", command=self.simulate)
-        self.sim_btn.grid(row=12, column=0, pady=(6, 0), sticky="we")
+        self.start_btn = ttk.Button(status_frame, text="▶ Start Server", command=self.toggle_server, 
+                                   bootstyle="success")
+        self.start_btn.grid(row=0, column=0, pady=(0, 8), sticky="we")
 
-        self.relaunch_btn = ttk.Button(left, text="Relaunch as Admin", command=self.relaunch_as_admin)
-        self.relaunch_btn.grid(row=14, column=0, pady=(6, 0), sticky="we")
+        self.sim_btn = ttk.Button(status_frame, text="📡 Simulate Client", command=self.simulate,
+                                 bootstyle="info")
+        self.sim_btn.grid(row=1, column=0, pady=(0, 8), sticky="we")
 
-        right = ttk.Frame(frm)
-        right.grid(row=0, column=1, sticky="nsew")
-        frm.columnconfigure(1, weight=1)
-        frm.rowconfigure(0, weight=1)
+        self.relaunch_btn = ttk.Button(status_frame, text="🔐 Relaunch as Admin", command=self.relaunch_as_admin,
+                                       bootstyle="warning")
+        self.relaunch_btn.grid(row=2, column=0, sticky="we")
 
-        self.log = tk.Text(right, width=80, height=24)
+        # Status indicator
+        self.if_warn = ttk.Label(status_frame, text='', foreground='orange', font=('TkDefaultFont', 9))
+        self.if_warn.grid(row=3, column=0, sticky='we', pady=(12, 0))
+
+        # Right panel - Log
+        right_frame = ttk.Frame(main_frm)
+        right_frame.grid(row=1, column=1, sticky="nsew")
+        right_frame.rowconfigure(0, weight=1)
+        right_frame.columnconfigure(0, weight=1)
+
+        log_label = ttk.Label(right_frame, text="Server Log", font=('TkDefaultFont', 12, 'bold'))
+        log_label.grid(row=0, column=0, sticky="w", pady=(0, 8))
+
+        # Create frame for log with scrollbar
+        log_frame = ttk.Frame(right_frame)
+        log_frame.grid(row=1, column=0, sticky="nsew")
+        log_frame.rowconfigure(0, weight=1)
+        log_frame.columnconfigure(0, weight=1)
+
+        self.log = tk.Text(log_frame, width=80, height=24, font=('Courier', 10), 
+                           bg='#2b2b2b', fg='#e8e8e8', relief='solid', borderwidth=1)
         self.log.grid(row=0, column=0, sticky="nsew")
+
+        # Add scrollbar
+        scrollbar = ttk.Scrollbar(log_frame, orient='vertical', command=self.log.yview)
+        scrollbar.grid(row=0, column=1, sticky='ns')
+        self.log.config(yscrollcommand=scrollbar.set)
 
         self.server = None
 
@@ -97,9 +148,7 @@ class DHCPGui:
         self.bind_entry.delete(0, 'end')
         self.bind_entry.insert(0, first_ip)
 
-        self.if_warn = ttk.Label(left, text='', foreground='orange')
-        self.if_warn.grid(row=13, column=0, sticky='we')
-
+        self.root.after(200, self._poll_log)
         self.root.after(200, self._poll_log)
 
     def _poll_log(self):
@@ -119,7 +168,7 @@ class DHCPGui:
     def toggle_server(self):
         if self.server and self.server.running.is_set():
             self.server.stop()
-            self.start_btn.config(text="Start Server")
+            self.start_btn.config(text="▶ Start Server")
             self.logger("Stopping server...")
         else:
             bind = self.bind_entry.get().strip() or "127.0.0.1"
@@ -151,7 +200,7 @@ class DHCPGui:
                 self.if_warn.config(text='')
             self.server = DHCPServer(bind_addr=bind, port=port, pool_start=pool_start, pool_end=pool_end, logger=self.logger)
             self.server.start()
-            self.start_btn.config(text="Stop Server")
+            self.start_btn.config(text="⏹ Stop Server")
             self.logger("Server started")
 
     def simulate(self):
