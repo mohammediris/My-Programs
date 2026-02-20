@@ -88,16 +88,13 @@ class DHCPGui:
         status_frame.grid(row=3, column=0, sticky="ew", pady=(0, 12))
         status_frame.columnconfigure(0, weight=1)
 
-        self.start_btn = ttk.Button(status_frame, text="▶ Start Server", command=self.toggle_server, 
-                                   bootstyle="success")
+        self.start_btn = ttk.Button(status_frame, text="▶ Start Server", command=self.toggle_server)
         self.start_btn.grid(row=0, column=0, pady=(0, 8), sticky="we")
 
-        self.sim_btn = ttk.Button(status_frame, text="📡 Simulate Client", command=self.simulate,
-                                 bootstyle="info")
+        self.sim_btn = ttk.Button(status_frame, text="📡 Simulate Client", command=self.simulate)
         self.sim_btn.grid(row=1, column=0, pady=(0, 8), sticky="we")
 
-        self.relaunch_btn = ttk.Button(status_frame, text="🔐 Relaunch as Admin", command=self.relaunch_as_admin,
-                                       bootstyle="warning")
+        self.relaunch_btn = ttk.Button(status_frame, text="🔐 Relaunch as Admin", command=self.relaunch_as_admin)
         self.relaunch_btn.grid(row=2, column=0, sticky="we")
 
         # Status indicator

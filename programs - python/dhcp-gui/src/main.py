@@ -7,12 +7,11 @@ def main():
     try:
         import ttkbootstrap as tb
         root = tb.Window(themename='darkly')
-        root.geometry('1100x700')
     except Exception:
         root = tk.Tk()
-        root.geometry('1100x700')
     
     root.title("DHCP Server Demo")
+    root.state('zoomed')  # Maximize window on Windows
     app = DHCPGui(root)
     root.mainloop()
 
