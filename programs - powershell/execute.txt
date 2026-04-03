@@ -1,0 +1,13 @@
+pwsh "C:\My Data\My Programs\My-Programs\programs - powershell\ping-multiple.ps1"
+
+# Basic usage
+.\ping-multiple.ps1
+
+# Custom config
+.\ping-multiple.ps1 -CsvFile "servers.csv" -PingCount 3 -IntervalSeconds 10 -OutputLogFile "network-log.txt"
+
+# One-time run
+.\ping-multiple.ps1 -RunOnce -Verbose
+
+# Scheduled task mode
+.\ping-multiple.ps1 -NoLoop -Debug
