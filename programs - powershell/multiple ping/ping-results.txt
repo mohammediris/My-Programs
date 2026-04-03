@@ -28,3 +28,21 @@ Server1             192.168.1.1       connected    1.6 ms
 Printer             192.168.1.100     not reachable-         
 Router              192.168.1.254     not reachable-         
 
+=========================== Cycle 1 - 2026-04-03 20:14:50 ===========================
+Hostname            IP Address        Status       Avg Time  
+Server1             192.168.1.1       connected    1.6 ms    
+Printer             192.168.1.100     not reachable-         
+Router              192.168.1.254     not reachable-         
+
+=========================== Cycle 2 - 2026-04-03 20:15:12 ===========================
+Hostname            IP Address        Status       Avg Time  
+Server1             192.168.1.1       connected    1.8 ms    
+Printer             192.168.1.100     not reachable-         
+Router              192.168.1.254     not reachable-         
+
+=========================== Cycle 1 - 2026-04-03 20:47:30 ===========================
+Hostname            IP Address        Status       Avg Time  
+Server1             192.168.1.1       connected    2.2 ms    
+Printer             192.168.1.100     not reachable-         
+Router              192.168.1.254     not reachable-         
+
