@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qpYBw20yhog=",
+  "dgSpecHash": "Ja9gSb+LKVc=",
   "success": true,
-  "projectFilePath": "C:\\My Data\\My Programs\\My-Programs\\programs - c#\\SubnetCalculator\\SubnetCalculator\\SubnetCalculator.csproj",
+  "projectFilePath": "C:\\My Data\\My Projects\\My-Programs\\programs - c#\\SubnetCalculator\\SubnetCalculator\\SubnetCalculator.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\iris\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.17\\microsoft.netcore.app.ref.8.0.17.nupkg.sha512",
     "C:\\Users\\iris\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.17\\microsoft.windowsdesktop.app.ref.8.0.17.nupkg.sha512",
