@@ -1,4 +1,4 @@
-pwsh "C:\My Data\My Programs\My-Programs\programs - powershell\ping-multiple.ps1"
+pwsh "C:\My Data\My Projects\My-Programs\programs - networking\multiple ping\ping-multiple.ps1"
 
 # Basic usage
 .\ping-multiple.ps1

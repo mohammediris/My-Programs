@@ -3,10 +3,19 @@
 This repository is a multi-language collection of small network utilities. Be pragmatic: prefer minimal, self-contained changes and validate behavior locally (UIs, web, or CLI). Below are the essential, actionable facts an AI coding agent needs to be immediately productive.
 
 ## Quick map (what matters) 🔎
-- C# GUI: `programs - c#/SubnetCalculator/` (WinForms, TargetFramework: `net8.0-windows`). Key files: `SubnetCalculator/Calculator.cs`, `Views/MainForm.cs`, `Program.cs`.
-- Python GUI: `programs - python/modern-subnet-scanner/src/` (ttkbootstrap/Tkinter). Key files: `gui.py`, `scanner.py`, `utils.py`, `main.py`.
-- Python Web: `programs - python/network-tools/` (Flask). Key files: `app.py`, `scanner.py`, `templates/subnet_scanner.html`.
-- Tests: lightweight/smoke tests in project folders (e.g., `programs - python/trending-news/test_trending_news.py`).
+- **C# GUI**: `programs - c#/SubnetCalculator/` (WinForms, TargetFramework: `net8.0-windows`). Key files: `SubnetCalculator/Calculator.cs`, `Views/MainForm.cs`, `Program.cs`.
+- **Python GUI**:
+  - `programs - python/modern-subnet-scanner/src/` (ttkbootstrap/Tkinter, thread-per-host scanning). Key files: `gui.py`, `scanner.py`, `utils.py`, `main.py`.
+  - `programs - python/dhcp-gui/src/` (Tkinter, DHCP server demo). Key files: `gui.py`, `dhcp_server.py`, `main.py`.
+  - `programs - python/techanalys/` (Tkinter, financial analysis). Key file: `main.py`.
+  - `programs - python/port scanner/` (Tkinter, ping utility). Key file: `nettest.py`.
+  - `programs - python/test/ping-multi-gui/src/` (ttkbootstrap, multi-IP pinger). Key files: `gui.py`, `main.py`, `ping.py`, `utils.py`.
+- **Python CLI/Web**:
+  - `programs - python/trending-news/` (CLI RSS parser). Key files: `trending_news.py`, `test_trending_news.py`.
+  - `programs - python/network-tools/` (Flask web app). Key files: `app.py`, `scanner.py`, `templates/subnet_scanner.html`.
+  - `programs - python/netstat report/` (CLI netstat analyzer). Key file: `netstat_foreign_connections.py`.
+- **PowerShell**: `programs - powershell/multiple ping/` (CSV-based multi-host monitor). Key file: `ping-multiple.ps1`.
+- **Tests**: Lightweight/smoke tests in project folders (e.g., `programs - python/trending-news/test_trending_news.py`, `programs - python/dhcp-gui/src/test_smoke.py`).
 
 ## Build / run commands (exact) ▶️
 - C# (build & run):
@@ -16,16 +25,30 @@ This repository is a multi-language collection of small network utilities. Be pr
 - Python (per-project):
   - Create venv: `python -m venv .venv && .\.venv\Scripts\activate` (Windows)
   - Install deps: `pip install -r requirements.txt` (run inside each Python project folder)
-  - Run GUI scanner: `python src/main.py` (modern-subnet-scanner)
-  - Run Flask app: `python app.py` (network-tools) — it uses `app.run(debug=True)`.
+  - Run commands:
+    - GUI scanner (modern-subnet-scanner): `python src/main.py`
+    - DHCP GUI: `python src/main.py`
+    - Ping multi-GUI: `python src/main.py`
+    - Port scanner: `python nettest.py`
+    - Techanalys: `python main.py`
+    - Trending news: `python trending_news.py --query AI --max 5`
+    - Flask app (network-tools): `python app.py` — uses `app.run(debug=True)`
+    - Netstat report: `python netstat_foreign_connections.py`
+- PowerShell:
+  - Run multiple ping: `.\ping-multiple.ps1 -CsvFile ips.csv`
 - Tests: run project tests with `python -m pytest` (if pytest present) or run the test script directly (see `trending-news` smoke test).
 
 ## Code patterns & important conventions ⚙️
 - Separation of concerns is explicit:
   - C#: `Calculator` holds all subnet logic, `MainForm` handles UI. Modify logic inside `Calculator.cs` and wire UI through `Views/MainForm.cs`.
   - Python GUI: `gui.py` drives UI and calls `scanner.scan_subnet(...)`. Note the signature: in `modern-subnet-scanner` the scanner mutates UI widgets (passes `output_text`, `progress_bar`, labels), while in `network-tools` the scanner is pure (returns a list of string results). Keep these semantics when editing or refactoring.
-- Concurrency: both Python scanners use one thread per host (native `threading.Thread`) and `Queue` for coordination. Avoid launching this naive approach on very large ranges; consider introducing a thread pool or `concurrent.futures.ThreadPoolExecutor` if you need to scale.
-- Networking: socket timeouts are short (`0.5s`) across scans. When adding tests or CI runs, prefer small subnets to avoid long runs or flaky network-dependent tests.
+- Concurrency: 
+  - Thread per host (modern-subnet-scanner, dhcp-gui): naive, avoid on large ranges (>100 hosts) to prevent memory spikes.
+  - ThreadPoolExecutor (port-scanner, ping-multi-gui): better for scaling, but cap max_workers.
+  - Synchronous (network-tools): single-threaded, slow for large subnets.
+  - Use `Queue` for inter-thread communication; avoid shared variables.
+  - Tag background threads as `daemon=True` for safe shutdown.
+- Networking: socket timeouts are short (`0.5s`) across scans. CIDR parsing uses `ipaddress.ip_network(subnet, strict=False)`. When adding tests or CI runs, prefer small subnets to avoid long runs or flaky network-dependent tests.
 
 ## Integration points / templates 🧩
 - Flask views render `templates/subnet_scanner.html`. Update both the form and `scanner.scan_subnet` together if you change port inputs or result format.

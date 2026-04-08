@@ -1,0 +1,5 @@
+"Hostname","IP","State","AvgMs","LastPingMs","Errors"
+"Printer","192.168.1.100","trying","-","-","0"
+"Server1","192.168.1.1","connected","4.8 ms","-","0"
+"google","1.1.1.1","connected","7 ms","-","0"
+"Router","8.8.8.8","connected","9.2 ms","-","0"
