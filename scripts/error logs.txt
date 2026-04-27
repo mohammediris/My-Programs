@@ -1,0 +1,21 @@
+$logPath = "C:\test"
+$keyword = "error"
+
+# Get latest 5 log files (by LastWriteTime)
+$latestLogs = Get-ChildItem -Path $logPath -File |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 5
+
+foreach ($file in $latestLogs) {
+    Write-Host "`n===== FILE: $($file.Name) =====" -ForegroundColor Cyan
+
+    $matches = Select-String -Path $file.FullName -Pattern $keyword -CaseSensitive:$false
+
+    if ($matches) {
+        foreach ($match in $matches) {
+            "{0}:{1}: {2}" -f $file.Name, $match.LineNumber, $match.Line
+        }
+    } else {
+        Write-Host "No matches found." -ForegroundColor DarkGray
+    }
+}

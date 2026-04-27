@@ -1,0 +1,90 @@
+param(
+    [string]$LogPath        = "C:\Program Files (x86)\Etimad Security Mind\EBM\logs",
+    [string]$Keyword        = "error",
+    [int]$LatestFileCount   = 5,
+    [string]$FileFilter     = "*.log",
+    [bool]$CaseSensitive    = $false,
+    [string]$ReportFile     = ""
+)
+
+# Force terminating errors so try/catch actually works
+$ErrorActionPreference = "Stop"
+
+# Validate path
+try {
+    if (!(Test-Path $LogPath)) {
+        throw "Path not found: $LogPath"
+    }
+}
+catch {
+    Write-Host "❌ Failed to access path: $($_.Exception.Message)" -ForegroundColor Red
+    exit
+}
+
+# Prepare report file
+if ($ReportFile) {
+    try {
+        "" | Out-File $ReportFile -Force
+    }
+    catch {
+        Write-Host "❌ Cannot write to report file: $($_.Exception.Message)" -ForegroundColor Red
+        exit
+    }
+}
+
+# Get latest files
+try {
+    $latestLogs = Get-ChildItem -Path $LogPath -Filter $FileFilter -File |
+        Sort-Object LastWriteTime -Descending |
+        Select-Object -First $LatestFileCount
+}
+catch {
+    Write-Host "❌ Failed to list files: $($_.Exception.Message)" -ForegroundColor Red
+    exit
+}
+
+foreach ($file in $latestLogs) {
+
+    try {
+        $header = "`n===== FILE: $($file.Name) ====="
+        Write-Host $header -ForegroundColor Cyan
+
+        if ($ReportFile) {
+            Add-Content $ReportFile $header
+        }
+
+        # Search inside file
+        $matches = Select-String -Path $file.FullName -Pattern $Keyword -CaseSensitive:$CaseSensitive
+
+        if ($matches) {
+            foreach ($match in $matches) {
+                $output = "{0}:{1}: {2}" -f $file.Name, $match.LineNumber, $match.Line
+
+                Write-Host $output -ForegroundColor Red
+
+                if ($ReportFile) {
+                    Add-Content $ReportFile $output
+                }
+            }
+        }
+        else {
+            Write-Host "No matches found." -ForegroundColor DarkGray
+
+            if ($ReportFile) {
+                Add-Content $ReportFile "No matches found."
+            }
+        }
+    }
+    catch {
+        # Per-file failure handling
+        $errorMsg = "⚠️ Error processing file $($file.Name): $($_.Exception.Message)"
+
+        Write-Host $errorMsg -ForegroundColor Yellow
+
+        if ($ReportFile) {
+            Add-Content $ReportFile $errorMsg
+        }
+
+        continue
+    }
+}
